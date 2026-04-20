@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Feliz Cumple Heidi 💖</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    touch-action: auto;
+}
+
+/* 🌈 Fondo animado */
+body {
+    background: linear-gradient(-45deg, #ff4da6, #b266ff, #66ffcc, #ffcc66);
+    background-size: 400% 400%;
+    animation: fondo 10s ease infinite;
+}
+
+@keyframes fondo {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+
+/* 🎬 INTRO */
+#entrada {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 999;
+    transition: all 1.5s ease;
+}
+
+/* TITULO */
+h1 {
+    text-align: center;
+    font-size: 42px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* TARJETAS */
+.card {
+    width: 90%;
+    max-width: 520px;
+    margin: 20px auto;
+    background: rgba(0,0,0,0.35);
+    padding: 15px;
+    border-radius: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+img {
+    width: 100%;
+    border-radius: 15px;
+}
+
+p {
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+/* BOTÓN */
+.btn-video {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* VIDEO */
+video {
+    display: block;
+    margin: 20px auto;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 15px;
+}
+
+/* 🎞 CRÉDITOS */
+#creditos {
+    position: fixed;
+    bottom: -300px;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    z-index: 3;
+    animation: subir 25s linear 5s forwards;
+}
+
+@keyframes subir {
+    to { bottom: 110%; }
+}
+
+/* CANVAS */
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div id="entrada">
+    <h1>🎁 Estás a punto de ver algo especial...</h1>
+    <button onclick="abrir()">Reproducir</button>
+</div>
+
+<h1>🎉 Feliz Cumpleaños Heidi 🎉</h1>
+
+<audio id="musica">
+    <source src="mañanitas.mp3" type="audio/mpeg">
+</audio>
+
+<!-- TARJETAS -->
+<div class="card">
+    <img src="imagen1.jpg">
+    <p>Hoy el mundo se ve más bonito porque existes 💖</p>
+</div>
+
+<div class="card">
+    <img src="imagen2.jpg">
+    <p>Gracias por cada momento, cada risa y cada recuerdo 🌙✨</p>
+</div>
+
+<div class="card">
+    <img src="imagen3.jpg">
+    <p>Te amo, eres mi hermana 💜🎂</p>
+</div>
+
+<!-- BOTÓN VIDEO -->
+<button class="btn-video" onclick="verVideo()">🎬 Ver video especial</button>
+
+<!-- VIDEO -->
+<video id="miVideo" controls style="display:none;">
+    <source src="video.mp4" type="video/mp4">
+</video>
+
+<!-- CRÉDITOS -->
+<div id="creditos">
+    <p>Dirigido a: Heidi 💖</p>
+    <p>Producción: Un momento especial</p>
+    <p>Mensaje: Amor, gratitud y vida 🌙</p>
+</div>
+
+<!-- CANVAS -->
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function Particle() {
+    this.x = Math.random() * canvas.width;
+    this.y = canvas.height;
+    this.speed = Math.random() * 6 + 2;
+    this.size = Math.random() * 5 + 2;
+    this.color = `hsl(${Math.random() * 360},100%,60%)`;
+}
+
+Particle.prototype.update = function() {
+    this.y -= this.speed;
+};
+
+Particle.prototype.draw = function() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+};
+
+function loop() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if (Math.random() < 0.4) {
+        particles.push(new Particle());
+    }
+
+    particles.forEach((p, i) => {
+        p.update();
+        p.draw();
+        if (p.y < 0) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(loop);
+}
+
+loop();
+
+/* ABRIR */
+function abrir() {
+    const entrada = document.getElementById("entrada");
+
+    entrada.style.opacity = "0";
+
+    setTimeout(() => {
+        entrada.style.display = "none";
+    }, 1500);
+
+    document.getElementById("musica").play();
+
+    for (let i = 0; i < 150; i++) {
+        particles.push(new Particle());
+    }
+}
+
+/* VER VIDEO */
+function verVideo() {
+    const musica = document.getElementById("musica");
+    musica.pause();
+
+    const video = document.getElementById("miVideo");
+    video.style.display = "block";
+
+    window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth"
+    });
+
+    video.play();
+}
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>

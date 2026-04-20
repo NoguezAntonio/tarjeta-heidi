@@ -8,11 +8,12 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     color: white;
 }
 
-/* 🌈 Fondo cine vivo */
+/* 🌈 Fondo */
 body {
     background: linear-gradient(-45deg, #ff4da6, #b266ff, #66ffcc, #ffcc66);
     background-size: 400% 400%;
@@ -25,38 +26,18 @@ body {
     100% {background-position: 0% 50%;}
 }
 
-/* 🎬 INTRO CINEMATOGRÁFICO */
+/* INTRO */
 #entrada {
     position: fixed;
     width: 100%;
     height: 100%;
     background: black;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     z-index: 999;
     transition: all 1.5s ease;
-}
-
-#entrada h1 {
-    font-size: 28px;
-    text-align: center;
-}
-
-#entrada button {
-    padding: 15px 25px;
-    font-size: 18px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-/* 🎥 efecto zoom cine */
-.zoom {
-    transform: scale(1.2);
-    transition: transform 2s ease;
 }
 
 /* contenido */
@@ -64,8 +45,8 @@ h1 {
     text-align: center;
     font-size: 42px;
     margin-top: 20px;
-    position: relative;
     z-index: 2;
+    position: relative;
 }
 
 .card {
@@ -75,14 +56,8 @@ h1 {
     background: rgba(0,0,0,0.35);
     padding: 15px;
     border-radius: 20px;
-    position: relative;
     z-index: 2;
-    animation: fadeIn 1.2s ease;
-}
-
-@keyframes fadeIn {
-    from {opacity: 0; transform: translateY(20px);}
-    to {opacity: 1; transform: translateY(0);}
+    position: relative;
 }
 
 img {
@@ -92,48 +67,32 @@ img {
 
 p {
     font-size: 17px;
-    line-height: 1.5;
 }
 
-/* 🎬 canvas */
+/* BOTÓN VIDEO */
+.btn-video {
+    display: block;
+    margin: 20px auto;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* CANVAS */
 canvas {
     position: fixed;
     top: 0;
     left: 0;
     z-index: 1;
-}
-
-/* 🎞 créditos finales */
-#creditos {
-    position: fixed;
-    bottom: -200px;
-    width: 100%;
-    text-align: center;
-    font-size: 18px;
-    z-index: 3;
-    animation: subir 12s linear forwards;
-}
-
-@keyframes subir {
-    to { bottom: 110%; }
-}
-
-/* 🎁 mensaje secreto */
-#secreto {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    width: 100%;
-    text-align: center;
-    z-index: 5;
-    font-size: 20px;
+    pointer-events: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎬 INTRO -->
 <div id="entrada">
     <h1>🎁 Estás a punto de ver algo especial...</h1>
     <button onclick="abrir()">Reproducir</button>
@@ -148,12 +107,12 @@ canvas {
 <!-- TARJETAS -->
 <div class="card">
     <img src="imagen1.jpg">
-    <p>Hoy el mundo se ve un poco más bonito porque tú existes 💖</p>
+    <p>Hoy el mundo se ve más bonito porque existes 💖</p>
 </div>
 
 <div class="card">
     <img src="imagen2.jpg">
-    <p>Hay personas que no se olvidan… tú eres una de ellas 🌙✨</p>
+    <p>Gracias por cada momento, cada risa y cada recuerdo 🌙✨</p>
 </div>
 
 <div class="card">
@@ -161,17 +120,11 @@ canvas {
     <p>Te amo, eres mi hermana 💜🎂</p>
 </div>
 
-<!-- 🎞 créditos estilo película -->
-<div id="creditos">
-    <p>Dirigido a: Heidi 💖</p>
-    <p>Producción: Un momento especial</p>
-    <p>Mensaje: Amor, gratitud y vida 🌙</p>
-</div>
+<!-- 🎥 BOTÓN VIDEO -->
+<button class="btn-video" onclick="verVideo()">
+🎬 Ver video especial
+</button>
 
-<!-- 🎁 secreto -->
-<div id="secreto">💌 Siempre vas a ser importante para mí 💖</div>
-
-<!-- 🎬 CANVAS FINAL BOSS -->
 <canvas id="canvas"></canvas>
 
 <script>
@@ -183,7 +136,6 @@ canvas.height = window.innerHeight;
 
 let particles = [];
 
-/* 🎆 partícula FINAL BOSS */
 function Particle() {
     this.x = Math.random() * canvas.width;
     this.y = canvas.height;
@@ -221,12 +173,11 @@ function loop() {
 
 loop();
 
-/* 🎬 abrir escena */
+/* 🎬 ABRIR EXPERIENCIA */
 function abrir() {
     const entrada = document.getElementById("entrada");
 
     entrada.style.opacity = "0";
-    document.body.classList.add("zoom");
 
     setTimeout(() => {
         entrada.style.display = "none";
@@ -234,15 +185,18 @@ function abrir() {
 
     document.getElementById("musica").play();
 
-    // explosión masiva
     for (let i = 0; i < 150; i++) {
         particles.push(new Particle());
     }
+}
 
-    // mensaje secreto final
-    setTimeout(() => {
-        document.getElementById("secreto").style.display = "block";
-    }, 8000);
+/* 🎥 IR AL VIDEO */
+function verVideo() {
+    const musica = document.getElementById("musica");
+    musica.pause();
+    musica.currentTime = 0;
+
+    window.location.href = "video.mp4";
 }
 
 window.addEventListener("resize", () => {
